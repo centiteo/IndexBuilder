@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<project basedir="." default="build" name="IndexBuilder">
+    
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+	<property name="name" value="bigdata-analysis-indexbuilder"/>
+	<property name="version" value="0.0.9"/>
+	<property name="build.dir" value="${basedir}/target"/>
+	<property name="build.classes" value="${build.dir}/classes"/>
+              	
+    <path id="IndexBuilder.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/hbase/hbase-client-1.0.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/hadoop-mapreduce/hadoop-mapreduce-client-core-2.6.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/hadoop-mapreduce/hadoop-mapreduce-client-jobclient-2.6.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/hbase/hbase-common-1.0.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/hbase/hbase-server-1.0.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/hadoop/hadoop-common-2.6.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/slf4j-api-1.7.5.jar"/>
+        <pathelement location="lib/slf4j-log4j12-1.7.5.jar"/>
+        <pathelement location="lib/hbase/hbase-protocol-1.0.0-cdh5.4.4.jar"/>
+        <pathelement location="lib/protobuf-java-2.5.0.jar"/>
+    </path>
+	
+    <target name="init">
+        <mkdir dir="target"/>
+    	<mkdir dir="target/classes"/>
+    </target>
+	
+    <target name="clean">
+        <delete dir="target"/>
+    </target>
+	
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="target/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="dataload/src/main/java"/>
+            <src path="server/src/main/java"/>
+            <classpath refid="IndexBuilder.classpath"/>
+        </javac>
+    </target>
+	
+	<target name="package" depends="clean,build">
+        <jar destfile="target/${name}-${version}.jar" basedir="${build.classes}" includes="**/*.*"/>
+    </target>
+    
+</project>
