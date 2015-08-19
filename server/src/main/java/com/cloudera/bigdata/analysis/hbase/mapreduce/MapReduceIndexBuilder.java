@@ -95,6 +95,7 @@ public class MapReduceIndexBuilder {
 
   public static class IndexMapper extends
       TableMapper<ImmutableBytesWritable, Put> {
+    public static byte[] RK_SEP = new byte[] { (byte) 255 };
 
     private TreeMap<Pair, ImmutableBytesWritable> indexes;
 
@@ -108,8 +109,7 @@ public class MapReduceIndexBuilder {
         byte[] value = result.getValue(pair.first, pair.second);
         LOG.info(new String(value));
 
-        Put put =
-            new Put(Bytes.add(value, Bytes.toBytes(255), result.getRow()));
+        Put put = new Put(Bytes.add(value, RK_SEP, result.getRow()));
         put.add(DUMMY_CF, DUMMY_QUA, DUMMY_VAL);
         context.write(entry.getValue(), put);
       }
